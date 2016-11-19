@@ -11,7 +11,7 @@
 """
 import re
 from bs4 import BeautifulSoup
-from .models import ArticleORM
+from models import ArticleORM
 from crawl_tools.Timer import get_beijing_time
 from crawl_tools.decorators import except_return_none
 ERN_METHOD = lambda func:except_return_none(func,ModelName='Google Scholar PageParser')
