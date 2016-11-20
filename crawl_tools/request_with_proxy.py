@@ -59,6 +59,7 @@ def request_with_proxy(url, timeout=14, use_ss=False, no_proxy_test=False):
         return requests.get(url, headers=headers, timeout=timeout)
     if not use_ss:
         proxy_port = rand_port(9054, 9155, [])
+        print('use port {}...'.format(proxy_port))
         proxies = {
                 "http": "socks5://127.0.0.1:{}".format(proxy_port),
                 "https": "socks5://127.0.0.1:{}".format(proxy_port)

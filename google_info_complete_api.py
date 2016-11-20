@@ -30,16 +30,15 @@ class GoogleInfoGenerator:
         req = request_with_proxy(
                 timeout = 20,
                 url = search_url,
-                #no_proxy_test=True
+                #no_proxy_test=True     
              )
-        if req.status_code==404:
-            raise ConnectionError('404')
         parser = PageParser(
             html_source=req.text
         )
         sections = parser.sections
         if len(sections)!=1:
             if parser.robot_error:
+                print(parser.robot_error)
                 raise ConnectionError('Robot Error')
             raise LookupError(
                 'Locate Article Error: '
