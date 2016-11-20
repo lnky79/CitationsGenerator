@@ -24,7 +24,6 @@ Session.configure(
     )
 )
 
-
 session = Session()
 '''
 res = session.query(ArticleORM).filter_by(id=17475957).first()
