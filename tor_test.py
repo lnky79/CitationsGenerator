@@ -16,8 +16,9 @@ error_ports = []
 ip_list = []
 for i in range(9054, 9154):
     try:
-        ip = test_port(i)
-        print(ip)
+        for j in range(2):
+            ip = test_port(i)
+            print(ip)
         if ip not in ip_list:
             ip_list.append(ip)
         else:
