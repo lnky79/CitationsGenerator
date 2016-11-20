@@ -37,8 +37,8 @@ class GoogleInfoGenerator:
         if len(sections)!=1:
             raise LookupError(
                 'Locate Article Error: '
-                ' Multi or No Results: '
-                '{}'.format(search_url)
+                ' Multi or No Results:  len: {}'
+                '\n{}\n'.format(len(sections),search_url)
             )
         return GoogleArticle(sec=sections[0])
 

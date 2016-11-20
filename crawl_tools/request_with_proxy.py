@@ -13,7 +13,7 @@ sys.path.append(root_dir)
 import time
 from crawl_tools.ua_pool import get_one_random_ua
 import requests
-#requests.packages.urllib3.disable_warnings()
+requests.packages.urllib3.disable_warnings()
 from random import randint
 
 '''

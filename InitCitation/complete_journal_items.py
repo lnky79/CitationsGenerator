@@ -38,7 +38,7 @@ def update_per_item(item):
         ).update()
     except LookupError as e:
         print(str(e))
-    except requests.exceptions.InvalidSchema as e:
+    except Exception as e:
         print(str(e))
     db_session.close()
 
