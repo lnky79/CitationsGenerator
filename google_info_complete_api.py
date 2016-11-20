@@ -25,7 +25,7 @@ class GoogleInfoGenerator:
     def get_google_item_by_search(self):
         search_url = (
                 'https://scholar.google.com'
-                '/scholar?hl=en&lr=lang_en&q={}'
+                '/scholar?q={}&btnG=&hl=en&lr=lang_en&as_sdt=0%2C5'
             ).format(self.ArticleObj.title.strip().replace(' ','+'))
         req = request_with_proxy(
                 timeout = 20,
@@ -38,8 +38,12 @@ class GoogleInfoGenerator:
         sections = parser.sections
         if len(sections)!=1:
             if parser.robot_error:
-                print(parser.robot_error)
-                raise ConnectionError('Robot Error')
+                #print(parser.robot_error)
+                raise ConnectionError(
+                    'Robot Error:{}'.\
+                        format(parser.robot_error))
+            else:
+                print('No Robot limit')
             raise LookupError(
                 'Locate Article Error: '
                 ' Multi or No Results:  len: {}'
