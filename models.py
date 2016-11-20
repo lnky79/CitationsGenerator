@@ -27,8 +27,8 @@ class ArticleORM(Base):
 
     def __repr__(self):
         return ("<ArticleORM(title='%s', google_id='%s',"
-                " link='%s', id=%s)>"
-        ) % (self.title, self.google_id,self.link, self.id)
+                " citations_link='%s', id=%s)>"
+        ) % (self.title, self.google_id,self.citations_link, self.id)
 
 
 class CitationLinkORM(Base):

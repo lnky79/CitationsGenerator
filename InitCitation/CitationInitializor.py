@@ -16,16 +16,20 @@ from GoogleScholar import PageParser,GoogleArticle
 from models import CiteRelationORM,ArticleORM
 from google_info_complete_api import GoogleInfoGenerator
 
+from sqlalchemy import text
+
+
 class CitationInitializor:
-    def __init__(self):
-        pass
+    def __init__(self,db_session):
+        self.db_session = db_session
 
     def update_google_info(self,Article):
         GoogleInfoGenerator(ArticleORM=Article).update()
 
-    def get_filter_items(self,query_args,limit):
-        return ArticleORM.objects.filter(**query_args)\
-            .order_by('id')[-limit:]
+    def get_uninitialized_items(self,limit):
+        return self.db_session.query(ArticleORM).filter(
+            text("google_id is NULL limit :x")
+        ).params(x=limit).all()
 
     def generate_citation_page_urls(self,
             cite_google_id,results_num):
@@ -51,12 +55,14 @@ class CitationInitializor:
         return True
 
     def save_relation(self,cite_google_id,cited_google_id):
-        CiteRelationORM(
-            cite_google_id=cite_google_id,
-            cited_google_id=cited_google_id
-        ).save()
+        db_session.add(
+            CiteRelationORM(
+                cite_google_id=cite_google_id,
+                cited_google_id=cited_google_id
+            )
+        )
+        db_session.commit()
 
     def add_article_citations(self,article_item):
         pass
-
 

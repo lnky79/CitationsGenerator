@@ -11,7 +11,14 @@
 """
 from crawl_tools.JsonConfig import DB_Config
 
-db = DB_Config(json_file_path='./pgdb_config.json')
+for path in ['.','..']:
+    try:
+        db = DB_Config(
+            json_file_path=
+                '{}/pgdb_config.json'.format(path)
+        ).to_dict()
+    except:
+        continue
 
 pg_url = (
     'postgresql://{}:{}@{}:{}/{}'
@@ -22,14 +29,13 @@ pg_url = (
 
 print(pg_url)
 
-from sqlalchemy import create_engine
+from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 Session = sessionmaker()
 Session.configure(
     bind = create_engine(
-        ('postgresql://lyn:tonylu716'
-         '@45.76.197.241:5432'
-         '/sf_development'),
-        echo = True
+        name_or_url=pg_url,echo=True
     )
 )
+
+db_session = Session()

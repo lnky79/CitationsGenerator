@@ -18,14 +18,35 @@ sys.path.append(
 
 from CitationInitializor import CitationInitializor
 
-ini =  CitationInitializor()
+from google_info_complete_api import GoogleInfoGenerator
 
-items = ini.get_filter_items(
-    query_args={
-        'google_id': None,
-    },
-    limit=100
-)
+from db_config import Session
 
-for item in items:
+
+ex_db_session = Session()
+ini = CitationInitializor(ex_db_session)
+
+import requests
+
+def update_per_item(item):
     print(item)
+    db_session = Session()
+    try:
+        GoogleInfoGenerator(
+            ArticleObj=item,
+            db_session=db_session
+        ).update()
+    except LookupError as e:
+        print(str(e))
+    except requests.exceptions.InvalidSchema as e:
+        print(str(e))
+    db_session.close()
+
+
+if __name__=="__main__":
+    from multiprocessing.dummy import Pool as ThreadPool
+    pool = ThreadPool(16)
+    res = ini.get_uninitialized_items(limit=16)
+    #update_per_item(res[0])
+    pool.map(update_per_item,res)
+    ex_db_session.close()
