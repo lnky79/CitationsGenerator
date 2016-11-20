@@ -32,6 +32,11 @@ class PageParser:
         except:
             return []
 
+    @property
+    def robot_error(self):
+        return self.soup.find(
+            text="Please show you're not a robot")
+
 
 class GoogleArticle:
     def __init__(self,sec):
@@ -137,4 +142,4 @@ class GoogleArticle:
 
 if __name__=='__main__':
     for sec in PageParser(from_web=False).sections:
-        Article(sec).show_in_cmd()
+        GoogleArticle(sec).show_in_cmd()

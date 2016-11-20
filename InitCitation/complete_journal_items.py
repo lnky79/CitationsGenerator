@@ -26,7 +26,6 @@ from db_config import Session
 ex_db_session = Session()
 ini = CitationInitializor(ex_db_session)
 
-import requests
 
 def update_per_item(item):
     print(item)
@@ -38,6 +37,8 @@ def update_per_item(item):
         ).update()
     except LookupError as e:
         print(str(e))
+    except ConnectionError as e:
+        print(str(e))
     except Exception as e:
         print(str(e))
     db_session.close()
@@ -46,7 +47,9 @@ def update_per_item(item):
 if __name__=="__main__":
     from multiprocessing.dummy import Pool as ThreadPool
     pool = ThreadPool(16)
-    res = ini.get_uninitialized_items(limit=16)
-    #update_per_item(res[0])
-    pool.map(update_per_item,res)
+    while True:
+        res = ini.get_uninitialized_items(limit=16)
+        #update_per_item(res[0])
+        pool.map(update_per_item,res)
     ex_db_session.close()
+

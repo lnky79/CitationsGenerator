@@ -27,14 +27,20 @@ class GoogleInfoGenerator:
                 'https://scholar.google.com'
                 '/scholar?hl=en&lr=lang_en&q={}'
             ).format(self.ArticleObj.title)
-        sections = PageParser(
-            html_source=request_with_proxy(
+        req = request_with_proxy(
                 timeout = 20,
                 url = search_url,
                 #no_proxy_test=True
-             ).text
-        ).sections
+             )
+        if req.status_code==404:
+            raise ConnectionError('404')
+        parser = PageParser(
+            html_source=req.text
+        )
+        sections = parser.sections
         if len(sections)!=1:
+            if parser.robot_error:
+                raise ConnectionError('Robot Error')
             raise LookupError(
                 'Locate Article Error: '
                 ' Multi or No Results:  len: {}'
