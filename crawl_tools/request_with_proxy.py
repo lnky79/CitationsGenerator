@@ -53,23 +53,11 @@ def test_port(port_num):
     sleep:   运行前等待时间
 返回请求结果
 '''
-def request_with_proxy(url, timeout=14, use_ss=False, 
-        sleep=15, no_proxy_test=False):
+def request_with_proxy(url, timeout=14, use_ss=False, no_proxy_test=False):
     headers = {'User-Agent': get_one_random_ua()}
     if no_proxy_test:
         return requests.get(url, headers=headers, timeout=timeout)
-    time.sleep(sleep)
     if not use_ss:
-        '''
-        for i in range(100):
-            proxy_port = rand_port(9054, 9155, [])
-            if test_port(proxy_port):
-                #检测端口有效再request
-                break
-            if i==20:
-                print('No available port...check tor')
-                return None
-        '''
         proxy_port = rand_port(9054, 9155, [])
         proxies = {
                 "http": "socks5://127.0.0.1:{}".format(proxy_port),

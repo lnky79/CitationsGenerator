@@ -26,7 +26,7 @@ class GoogleInfoGenerator:
         search_url = (
                 'https://scholar.google.com'
                 '/scholar?hl=en&lr=lang_en&q={}'
-            ).format(self.ArticleObj.title),
+            ).format(self.ArticleObj.title)
         sections = PageParser(
             html_source=request_with_proxy(
                 timeout = 20,
