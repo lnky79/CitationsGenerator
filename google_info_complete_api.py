@@ -26,12 +26,13 @@ class GoogleInfoGenerator:
         search_url = (
                 'https://scholar.google.com'
                 '/scholar?hl=en&lr=lang_en&q={}'
-            ).format(self.ArticleObj.title)
+            ).format(self.ArticleObj.title.strip().replace(' ','+'))
         req = request_with_proxy(
                 timeout = 20,
                 url = search_url,
                 #no_proxy_test=True
              )
+        print(search_url)
         if req.status_code==404:
             raise ConnectionError('404')
         parser = PageParser(
