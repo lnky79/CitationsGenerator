@@ -26,7 +26,7 @@ class GoogleInfoGenerator:
         search_url = (
                 'https://scholar.google.com'
                 '/scholar?q={}&btnG=&hl=en&lr=lang_en&as_sdt=0%2C5'
-            ).format(self.ArticleObj.title.strip().replace(' ','+'))
+            ).format(self.ArticleObj.title.strip())
         req = request_with_proxy(
                 timeout = 20,
                 url = search_url,

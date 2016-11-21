@@ -33,7 +33,7 @@ class CitationInitializor:
 
     def get_uninitialized_items(self,limit):
         max_id = self.get_max_id()
-        gap = random.choice(list(range(max_id)))
+        gap = random.choice(range(max_id))
         #print(gap)
         return self.db_session.query(ArticleORM).filter(
             text("google_id is NULL and id>:left and id<:right")
