@@ -43,21 +43,28 @@ def update_per_item(item):
         err += str(e)
     except Exception as e:
         err += str(e)
-    if err!='':
-        pass
-        #status += err
-    else:
+    db_session.close()
+    if err=='':
         status += 'Success'
         print(status)
-    db_session.close()
+        return True
+    else:
+        return False
 
 
 if __name__=="__main__":
     from multiprocessing.dummy import Pool as ThreadPool
     pool = ThreadPool(256)
     while True:
-        res = ini.get_uninitialized_items(limit=10000)
-        #update_per_item(res[0])
-        pool.map(update_per_item,res)
+        range_length = 100
+        items = ini.get_uninitialized_items(limit=range_length)
+        print('Got {} items between range {}...'\
+              .format(len(items),range_length))
+        crawl_res = pool.map(update_per_item,items)
+        success = crawl_res.count(True)
+        err = crawl_res.count(False)
+        print(('********* Unit Result **************\n'
+               'Error: {}      Success: {} \n'
+               '************************************\n')\
+              .format(err,success))
     ex_db_session.close()
-
