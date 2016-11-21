@@ -28,27 +28,35 @@ ini = CitationInitializor(ex_db_session)
 
 
 def update_per_item(item):
-    print(item)
+    #print(item.id)
     db_session = Session()
+    status = '{}: '.format(item.id)
+    err = ''
     try:
         GoogleInfoGenerator(
             ArticleObj=item,
             db_session=db_session
         ).update()
     except LookupError as e:
-        print(str(e))
+        err += str(e)
     except ConnectionError as e:
-        print(str(e))
+        err += str(e)
     except Exception as e:
-        print(str(e))
+        err += str(e)
+    if err!='':
+        pass
+        #status += err
+    else:
+        status += 'Success'
+        print(status)
     db_session.close()
 
 
 if __name__=="__main__":
     from multiprocessing.dummy import Pool as ThreadPool
-    pool = ThreadPool(16)
+    pool = ThreadPool(256)
     while True:
-        res = ini.get_uninitialized_items(limit=16)
+        res = ini.get_uninitialized_items(limit=10000)
         #update_per_item(res[0])
         pool.map(update_per_item,res)
     ex_db_session.close()
