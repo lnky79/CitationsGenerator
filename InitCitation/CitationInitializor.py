@@ -22,18 +22,19 @@ from sqlalchemy import text,func,select
 class CitationInitializor:
     def __init__(self,db_session):
         self.db_session = db_session
+        self.max_id = 0
+        self.generate_max_id()
 
     def update_google_info(self,Article):
         GoogleInfoGenerator(ArticleORM=Article).update()
 
-    def get_max_id(self):
-        return self.db_session.query(
+    def generate_max_id(self):
+        self.max_id = self.db_session.query(
             func.max(ArticleORM.id)
         ).first()[0]
 
     def get_uninitialized_items(self,limit):
-        max_id = self.get_max_id()
-        gap = random.choice(range(max_id))
+        gap = random.choice(range(self.max_id))
         #print(gap)
         return self.db_session.query(ArticleORM).filter(
             text("google_id is NULL and id>:left and id<:right")
