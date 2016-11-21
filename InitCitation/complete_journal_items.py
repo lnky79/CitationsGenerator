@@ -56,7 +56,7 @@ if __name__=="__main__":
     from multiprocessing.dummy import Pool as ThreadPool
     pool = ThreadPool(256)
     while True:
-        range_length = 100
+        range_length = 10000
         items = ini.get_uninitialized_items(limit=range_length)
         print('Got {} items between range {}...'\
               .format(len(items),range_length))
