@@ -34,7 +34,8 @@ from sqlalchemy.orm import sessionmaker
 Session = sessionmaker()
 Session.configure(
     bind = create_engine(
-        name_or_url=pg_url,echo=True
+        name_or_url=pg_url,
+        echo=True
     )
 )
 

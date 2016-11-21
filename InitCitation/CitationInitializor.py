@@ -11,12 +11,12 @@
 """
 import os,sys
 sys.path.append(os.path.dirname(sys.path[0]))
-import requests
+import requests,random
 from GoogleScholar import PageParser,GoogleArticle
 from models import CiteRelationORM,ArticleORM
 from google_info_complete_api import GoogleInfoGenerator
 
-from sqlalchemy import text
+from sqlalchemy import text,func,select
 
 
 class CitationInitializor:
@@ -26,10 +26,18 @@ class CitationInitializor:
     def update_google_info(self,Article):
         GoogleInfoGenerator(ArticleORM=Article).update()
 
+    def get_max_id(self):
+        return self.db_session.query(
+            func.max(ArticleORM.id)
+        ).first()[0]
+
     def get_uninitialized_items(self,limit):
+        max_id = self.get_max_id()
+        gap = random.choice(list(range(max_id)))
+        #print(gap)
         return self.db_session.query(ArticleORM).filter(
-            text("google_id is NULL limit :x")
-        ).params(x=limit).all()
+            text("google_id is NULL and id>:left and id<:right")
+        ).params(left=gap,right=gap+limit).all()
 
     def generate_citation_page_urls(self,
             cite_google_id,results_num):
