@@ -53,13 +53,14 @@ def test_port(port_num):
     sleep:   运行前等待时间
 返回请求结果
 '''
-def request_with_proxy(url, timeout=14, use_ss=False, no_proxy_test=False):
+def request_with_proxy(url,gap_time=15, timeout=14, use_ss=False, no_proxy_test=False):
     headers = {'User-Agent': get_one_random_ua()}
     if no_proxy_test:
         return requests.get(url, headers=headers, timeout=timeout)
+    time.sleep(gap_time)
     if not use_ss:
         proxy_port = rand_port(9054, 9155, [])
-        print('use port {}...'.format(proxy_port))
+        #print('use port {}...'.format(proxy_port))
         proxies = {
                 "http": "socks5://127.0.0.1:{}".format(proxy_port),
                 "https": "socks5://127.0.0.1:{}".format(proxy_port)

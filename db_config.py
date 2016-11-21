@@ -35,7 +35,7 @@ Session = sessionmaker()
 Session.configure(
     bind = create_engine(
         name_or_url=pg_url,
-        echo=True
+        echo=False
     )
 )
 
