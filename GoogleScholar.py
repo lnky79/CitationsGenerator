@@ -65,12 +65,18 @@ class GoogleArticle:
     @property
     @ERN_METHOD
     def citations_count(self):
-        return int(re.split('：| ',self.sec.select('.gs_fl > a')[0].text)[-1])
+        try:
+            return int(re.split('：| ',self.sec.select('.gs_fl > a')[0].text)[-1])
+        except:
+            return 0
 
     @property
     @ERN_METHOD
     def citations_link(self):
-        res = self.sec.select('.gs_fl > a')[0]['href']
+        try:
+            res = self.sec.select('.gs_fl > a')[0]['href']
+        except:
+            return None
         if res == '#':
             return None
         else:
