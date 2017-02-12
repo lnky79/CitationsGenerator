@@ -1,8 +1,9 @@
-import requests
+import requests,time
 from bs4 import BeautifulSoup
-import time
+from multiprocessing.dummy import Pool as ThreadPool
 
-def test_port(port_num):
+
+def get_tor_ip(port_num):
     proxies = {
         "http": "socks5://127.0.0.1:{}".format(port_num),
         "https": "socks5://127.0.0.1:{}".format(port_num)
@@ -10,28 +11,28 @@ def test_port(port_num):
     r = requests.get("https://api.ipify.org/", proxies=proxies, timeout=20)
     return r.text
 
-duplicate = 0
-error = 0
-error_ports = []
-ip_list = []
-for i in range(9054, 9154):
+def work_per_proc(port_num):
     try:
-        for j in range(2):
-            ip = test_port(i)
-            print(ip)
-        if ip not in ip_list:
-            ip_list.append(ip)
-        else:
-            duplicate += 1
+        ip = get_tor_ip(port_num)
+        print('%s: %s'%(port_num,ip))
+        return ip
     except Exception as e:
-        error += 1
-        error_ports.append(i)
-        print(i)
-        print(e)
+        print('%s: %s'%(port_num,'error'))
+        return 'error port'
 
-    time.sleep(30)
+pool = ThreadPool(64)
+res = pool.map(work_per_proc,range(9054,9154))
 
-print("duplicate " + str(duplicate))
-print("how many ips can be used " + str(len(ip_list)))
-print("how many ips can not be used " + str(error))
-print(error_ports)
+error_cot = res.count('error port')
+
+print(type(res))
+
+res = res.remove('error port')
+
+print(res)
+
+ip_count = len(res)
+
+ip_real_count = len(set(res))
+
+print(error_cot,ip_count,ip_real_count)

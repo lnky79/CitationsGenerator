@@ -53,7 +53,12 @@ def test_port(port_num):
     sleep:   运行前等待时间
 返回请求结果
 '''
-def request_with_proxy(url,gap_time=15, timeout=14, use_ss=False, no_proxy_test=False):
+def request_with_proxy(url,
+        gap_time=15,
+        timeout=14,
+        use_ss=False,
+        no_proxy_test=False
+    ):
     headers = {'User-Agent': get_one_random_ua()}
     if no_proxy_test:
         return requests.get(url, headers=headers, timeout=timeout)
@@ -87,3 +92,22 @@ def request_with_random_ua(url,timeout=3):
         except Exception as e:
             print('[Error]request_with_random_ua :%s'%str(e))
     return None
+
+import json
+def req_with_proxy_pool(url):
+    proxy_conf = json.loads(requests.get(
+        'http://127.0.0.1:8000/tool/get_proxy_config'
+    ).text)['data']
+    proxy_url = '{}://{}:{}'.format(
+        proxy_conf['proxy_type'].lower(),
+        proxy_conf['ip'],
+        proxy_conf['port']
+    )
+    print(proxy_url,proxy_conf)
+    return requests.get(
+        url = url,
+        proxies = {
+            'http': proxy_url,
+            'https': proxy_url
+        }
+    )
