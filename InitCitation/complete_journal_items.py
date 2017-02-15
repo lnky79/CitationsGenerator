@@ -18,7 +18,7 @@ sys.path.append(
 
 from CitationInitializor import CitationInitializor
 
-from google_info_complete_api import GoogleInfoGenerator
+from GoogleInfoGenerator import GoogleInfoGenerator
 
 from db_config import Session
 

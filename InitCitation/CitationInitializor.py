@@ -12,9 +12,9 @@
 import os,sys
 sys.path.append(os.path.dirname(sys.path[0]))
 import requests,random
-from GoogleScholar import PageParser,GoogleArticle
+from GoogleScholarParser import PageParser,GoogleArticle
 from models import CiteRelationORM,ArticleORM
-from google_info_complete_api import GoogleInfoGenerator
+from GoogleInfoGenerator import GoogleInfoGenerator
 
 from sqlalchemy import text,func,select
 
