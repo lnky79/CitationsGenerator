@@ -101,21 +101,23 @@ global proxy_servers_cache
 proxy_servers_cache = []
 
 import json,random
-def load_proxy_cache(counts):
-    resp = requests.get(
-        'http://127.0.0.1:8000/tool/get_proxy_configs?quantity={}'.format(counts)
-    ).text
+def load_proxy_cache(counts=10,get_all_valid=True):
+    if get_all_valid:
+        url = 'http://127.0.0.1:8000/tool/get_proxy_configs?get_all_valid=1'
+    else:
+        url = 'http://127.0.0.1:8000/tool/get_proxy_configs?quantity={}'.format(counts)
+    resp = requests.get(url).text
     proxy_confs = json.loads(resp)['data']
     global proxy_servers_cache
     proxy_servers_cache = proxy_confs 
     print(proxy_servers_cache)
 
 print('loading proxy cache...')
-load_proxy_cache(counts=10)
+load_proxy_cache(get_all_valid=True)
 
 def req_with_proxy_pool(url,headers=None,need_print_res=False):
     proxy_conf = random.choice(proxy_servers_cache)
-    print('conf',proxy_conf)
+    #print('conf',proxy_conf)
     proxy_url = '{}://{}:{}'.format(
         proxy_conf['type'].lower(),
         proxy_conf['ip'],
