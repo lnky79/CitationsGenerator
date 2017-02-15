@@ -44,6 +44,7 @@ def test_port(port_num):
         return r.text
     except:
         return None
+
 '''
 功能：发送代理请求
 传入参数：
@@ -57,9 +58,12 @@ def request_with_proxy(url,
         gap_time=15,
         timeout=14,
         use_ss=False,
-        no_proxy_test=False
+        no_proxy_test=False,
+        use_self_pool=False
     ):
     headers = {'User-Agent': get_one_random_ua()}
+    if use_self_pool:
+        return req_with_proxy_pool(url,headers)
     if no_proxy_test:
         return requests.get(url, headers=headers, timeout=timeout)
     time.sleep(gap_time)
@@ -93,21 +97,39 @@ def request_with_random_ua(url,timeout=3):
             print('[Error]request_with_random_ua :%s'%str(e))
     return None
 
-import json
-def req_with_proxy_pool(url):
-    proxy_conf = json.loads(requests.get(
-        'http://127.0.0.1:8000/tool/get_proxy_config'
-    ).text)['data']
+global proxy_servers_cache
+proxy_servers_cache = []
+
+import json,random
+def load_proxy_cache(counts):
+    resp = requests.get(
+        'http://127.0.0.1:8000/tool/get_proxy_configs?quantity={}'.format(counts)
+    ).text
+    proxy_confs = json.loads(resp)['data']
+    global proxy_servers_cache
+    proxy_servers_cache = proxy_confs 
+    print(proxy_servers_cache)
+
+print('loading proxy cache...')
+load_proxy_cache(counts=10)
+
+def req_with_proxy_pool(url,headers=None,need_print_res=False):
+    proxy_conf = random.choice(proxy_servers_cache)
+    print('conf',proxy_conf)
     proxy_url = '{}://{}:{}'.format(
-        proxy_conf['proxy_type'].lower(),
+        proxy_conf['type'].lower(),
         proxy_conf['ip'],
         proxy_conf['port']
     )
-    print(proxy_url,proxy_conf)
+    if need_print_res:
+        print(proxy_url,proxy_conf)
     return requests.get(
         url = url,
         proxies = {
             'http': proxy_url,
             'https': proxy_url
-        }
+        },
+        headers = headers
     )
+
+
