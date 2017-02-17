@@ -107,6 +107,10 @@ def load_proxy_cache(counts=10,get_all_valid=True):
     else:
         url = 'http://127.0.0.1:8000/tool/get_proxy_configs?quantity={}'.format(counts)
     resp = requests.get(url).text
+    '''
+    with open('./test.html','w') as f:
+        f.write(resp)
+    '''
     proxy_confs = json.loads(resp)['data']
     global proxy_servers_cache
     proxy_servers_cache = proxy_confs 
