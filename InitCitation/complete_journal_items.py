@@ -49,12 +49,14 @@ def update_per_item(item):
         print(status)
         return True
     else:
+        status += 'Fail:' + str(err) 
+        print(status)
         return False
 
 
 if __name__=="__main__":
     from multiprocessing.dummy import Pool as ThreadPool
-    pool = ThreadPool(256)
+    pool = ThreadPool(16)
     while True:
         range_length = 10000
         items = ini.get_uninitialized_items(limit=range_length)
