@@ -28,17 +28,19 @@ class GoogleInfoGenerator:
             'https://scholar.google.com'
             '/scholar?q={}&btnG=&hl=en&lr=lang_en&as_sdt=0%2C5'
         ).format(self.ArticleObj.title.strip())
+        #print('searching {}...'.format(search_url))
         req = request_with_proxy(
-            timeout = 20,
+            timeout = 10,
             url = search_url,
-            gap_time = random.choice(range(2,5)),
-            use_self_pool=True
-        )
+            gap_time = random.choice(range(0,3)),
+            #use_self_pool= random.choice([True,False])
+            use_self_pool = False
+            )
         parser = PageParser(
             html_source=req.text
         )
         sections = parser.sections
-        if len(sections)!=1:
+        if len(sections)>2:
             if parser.robot_error:
                 #print(parser.robot_error)
                 raise ConnectionError(
