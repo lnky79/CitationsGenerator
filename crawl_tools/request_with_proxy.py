@@ -68,7 +68,7 @@ def request_with_proxy(url,
         return requests.get(url, headers=headers, timeout=timeout)
     time.sleep(gap_time)
     if not use_ss:
-        proxy_port = rand_port(9054, 9155, [])
+        proxy_port = rand_port(9054, 10055, [])
         #print('use port {}...'.format(proxy_port))
         proxies = {
                 "http": "socks5://127.0.0.1:{}".format(proxy_port),
@@ -86,16 +86,11 @@ def request_with_proxy(url,
         return requests.get(url, proxies=proxies, timeout=timeout, headers=headers,verify=False)
 
 def request_with_random_ua(url,timeout=3):
-    for i in range(6):
-        try:
-            return requests.get(
-                url = url,
-                timeout = timeout,
-                headers = {'User-Agent': get_one_random_ua()}
-            )
-        except Exception as e:
-            print('[Error]request_with_random_ua :%s'%str(e))
-    return None
+    return requests.get(
+        url = url,
+        timeout = timeout,
+        headers = {'User-Agent': get_one_random_ua()}
+    )
 
 global proxy_servers_cache
 proxy_servers_cache = []
